@@ -69,9 +69,7 @@ const Layout = ({ children }) => {
           isSidebarOpen ? 'ml-64' : 'ml-16'
         } md:ml-64`} // Apply margin-left only on mobile when sidebar is open
       >
-        <header className="mb-8">
-          <h1 className="text-3xl font-semibold text-gray-800">Welcome to the Admin Dashboard</h1>
-        </header>
+
 
         <div className="bg-white p-6 rounded-lg shadow-md">{children}</div>
       </div>
