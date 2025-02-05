@@ -1,38 +1,74 @@
 // src/components/Layout.js
+import { useState } from 'react';
 import Link from 'next/link';
 
 const Layout = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
   return (
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-blue-600 text-white p-6 fixed h-full">
-        <div className="text-2xl font-semibold mb-8">SchoolRank</div>
-        <ul className="space-y-4">
-          <li>
-            <Link href="/">
-              <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">Home</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/dashboard">
-              <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/schools">
-              <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">Schools</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/profile">
-              <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">Profile</span>
-            </Link>
-          </li>
-        </ul>
+      <div
+        className={`${
+          isSidebarOpen ? 'w-64' : 'w-16'
+        } transition-all duration-300 ease-in-out bg-blue-600 text-white p-6 fixed h-full overflow-hidden md:w-64`}
+      >
+        {/* Hamburger Menu for Mobile - Background only applied to the button */}
+        <div className="flex items-center justify-between md:hidden bg-blue-600 p-3 rounded-md">
+          <button
+            onClick={toggleSidebar}
+            className="text-white text-2xl focus:outline-none"
+          >
+            {isSidebarOpen ? '×' : '≡'}
+          </button>
+        </div>
+
+        {/* Sidebar Content */}
+        <div className={`${isSidebarOpen ? 'block' : 'hidden'} md:block`}>
+          <div className="text-2xl font-semibold mb-8">SchoolRank</div>
+          <ul className="space-y-4">
+            <li>
+              <Link href="/">
+                <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">
+                  Home
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/dashboard">
+                <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">
+                  Dashboard
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/schools">
+                <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">
+                  Schools
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/profile">
+                <span className="block py-2 px-4 text-lg hover:bg-blue-700 rounded-md transition">
+                  Profile
+                </span>
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-64 p-8 bg-gray-50">
+      <div
+        className={`flex-1 p-8 bg-gray-50 transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? 'ml-64' : 'ml-16'
+        } md:ml-64`} // Apply margin-left only on mobile when sidebar is open
+      >
         <header className="mb-8">
           <h1 className="text-3xl font-semibold text-gray-800">Welcome to the Admin Dashboard</h1>
         </header>
