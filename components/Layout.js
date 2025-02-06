@@ -101,6 +101,17 @@ const Layout = ({ children }) => {
                 </span>
               </Link>
             </li>
+               {/* Add Questionnaire link */}
+               <li>
+              <Link href="/report">
+                <span
+                  className="flex items-center py-3 px-4 text-lg hover:bg-gray-700 rounded-md transition"
+                >
+                  <FaClipboardList className="mr-3 text-xl" />
+                  {isSidebarOpen && <span>Report</span>}
+                </span>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

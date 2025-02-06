@@ -4,28 +4,43 @@ import { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa'; // For the next button
 
 const Questionnaire = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const [questions, setQuestions] = useState({});
   const [currentStep, setCurrentStep] = useState(0); // Manage the current step in the form
+  const [selectedAnswers, setSelectedAnswers] = useState({}); // Store selected answers for each question
 
   // Load questions from the public folder's JSON file
   useEffect(() => {
-    fetch('/questions.json')
+    fetch('/questionsprev.json')
       .then((response) => response.json())
       .then((data) => setQuestions(data));
   }, []);
 
+  // Load previous answers from localStorage if available
+  useEffect(() => {
+    const savedAnswers = JSON.parse(localStorage.getItem('questionnaireAnswers'));
+    if (savedAnswers) {
+      setSelectedAnswers(savedAnswers);
+    }
+  }, []);
+
   const onSubmit = (data) => {
     console.log(data);
+
+    // Store answers in localStorage when form is submitted
+    localStorage.setItem('questionnaireAnswers', JSON.stringify(data));
+
     // Send data to the backend (e.g., POST to save questionnaire response)
+    // Implement the backend integration if necessary
   };
 
-  const options = [
-    'Meeting standard?',
-    'Compliant with essential requirements?',
-    'Moderate compliant?',
-    'Borderline compliant?',
-    'Diminutive compliant?',
+  // Rating options for each question
+  const ratingOptions = [
+    'Meeting Standard',
+    'Compliant with Essential Requirements',
+    'Moderate Compliant',
+    'Borderline Compliant',
+    'Diminutive Compliant',
     'Not Applicable',
   ];
 
@@ -44,12 +59,21 @@ const Questionnaire = () => {
     }
   };
 
+  // Handle selecting an answer
+  const handleSelectAnswer = (question, option) => {
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [question]: option,
+    }));
+    setValue(sanitizeInputName(question), option); // Update form state with the selected answer
+  };
+
   return (
     <Layout>
       <div className="text-center mt-8 mb-6">
         <h1 className="text-3xl font-bold text-white">School Questionnaire</h1>
         <p className="mt-4 text-lg text-gray-400">
-          Please answer the following questions to help us rate the school.
+          Please answer the following questions to help us rate the school based on essential factors.
         </p>
       </div>
 
@@ -69,19 +93,23 @@ const Questionnaire = () => {
                     <div key={idx} className="flex flex-col">
                       <label className="text-lg font-medium text-gray-300 mb-2">{question}</label>
 
-                      {/* Render radio buttons for options */}
-                      <div className="flex flex-wrap gap-6">
-                        {options.map((option, idx) => (
-                          <label key={idx} className="flex items-center text-gray-300">
-                            <input
-                              type="radio"
-                              {...register(inputName)}
-                              value={option}
-                              className="mr-2 rounded-full text-turquoise-500 focus:ring-2 focus:ring-turquoise-500"
-                            />
-                            {option}
-                          </label>
-                        ))}
+                      {/* Render dropdown for options */}
+                      <div className="relative">
+                        <select
+                          {...register(inputName)}
+                          value={selectedAnswers[question] || ''}
+                          onChange={(e) => handleSelectAnswer(question, e.target.value)}
+                          className="w-full p-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-turquoise-500"
+                        >
+                          <option value="" disabled selected>
+                            Select an option
+                          </option>
+                          {ratingOptions.map((option, idx) => (
+                            <option key={idx} value={option} className="bg-gray-900">
+                              {option}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                   );
