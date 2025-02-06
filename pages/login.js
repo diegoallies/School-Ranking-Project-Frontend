@@ -14,8 +14,8 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isRegister
-      ? 'https://school-ranking-project-backend.vercel.app/api/auth/register'
-      : 'https://school-ranking-project-backend.vercel.app/api/auth/login';
+      ? '/api/auth/register' // Use the proxy URL for development
+      : '/api/auth/login';
 
     const body = isRegister
       ? JSON.stringify({ name, email, password, role })
