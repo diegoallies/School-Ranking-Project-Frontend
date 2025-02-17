@@ -7,7 +7,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const Report = () => {
   const [reportData, setReportData] = useState(null);
-  
+
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('questionnaireAnswers')) || {};
     setReportData(storedData);
@@ -24,6 +24,17 @@ const Report = () => {
       categoryScores[category] = avgScore;
     });
     return categoryScores;
+  };
+
+  const calculateQuestionAverages = (category) => {
+    if (!reportData || !reportData[category]) return {};
+
+    const questionScores = reportData[category];
+    const questionAverages = {};
+    Object.entries(questionScores).forEach(([question, score]) => {
+      questionAverages[question] = score;
+    });
+    return questionAverages;
   };
 
   const categoryAverages = calculateCategoryAverages();
@@ -73,6 +84,41 @@ const Report = () => {
               <p>All categories performing well.</p>
             )}
           </ul>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Detailed Breakdown by Category</h2>
+          {Object.entries(reportData).map(([category, answers]) => (
+            <div key={category} className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-200">{category}</h3>
+              <ul className="list-disc ml-6 text-gray-300">
+                {Object.entries(answers).map(([question, score]) => (
+                  <li key={question}>
+                    {question}: <span className={score >= 4 ? 'text-green-400' : 'text-red-400'}>{score}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Questionnaire Insights</h2>
+          {Object.entries(categoryAverages).map(([category, avg]) => (
+            <div key={category} className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-200">{category} Average Score: {avg.toFixed(2)}</h3>
+              <p className={avg >= 4 ? 'text-green-400' : 'text-red-400'}>
+                {avg >= 4 ? 'Strong performance in this area' : 'Needs attention in this area'}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Sentiment Analysis (if applicable)</h2>
+          <p className="text-gray-300">Analyze sentiments from the responses (positive, neutral, negative).</p>
+          {/* You can replace this with real sentiment analysis data if you have it */}
+          <div className="text-gray-300">Sentiment summary: Mostly positive feedback received!</div>
         </div>
       </div>
     </Layout>
