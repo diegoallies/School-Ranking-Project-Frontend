@@ -6,7 +6,7 @@ const Auth = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
+  const [role, setRole] = useState('guest');
   const [isRegister, setIsRegister] = useState(false);
   const { login } = useAuthStore();
   const router = useRouter();
@@ -82,7 +82,9 @@ const Auth = () => {
               required
             >
               <option value="admin">Admin</option>
-              <option value="user">User</option>
+              <option value="guest">User</option>
+              <option value="serviceProv">Installer Service Provider</option>
+              <option value="schoolRep">School Representative</option>
             </select>
           )}
           <button
