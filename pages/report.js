@@ -88,19 +88,24 @@ const Report = () => {
 
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">Detailed Breakdown by Category</h2>
-          {Object.entries(reportData).map(([category, answers]) => (
-            <div key={category} className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-200">{category}</h3>
-              <ul className="list-disc ml-6 text-gray-300">
-                {Object.entries(answers).map(([question, score]) => (
-                  <li key={question}>
-                    {question}: <span className={score >= 4 ? 'text-green-400' : 'text-red-400'}>{score}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {reportData ? (
+            Object.entries(reportData).map(([category, answers]) => (
+              <div key={category} className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-200">{category}</h3>
+                <ul className="list-disc ml-6 text-gray-300">
+                  {Object.entries(answers).map(([question, score]) => (
+                    <li key={question}>
+                      {question}: <span className={score >= 4 ? 'text-green-400' : 'text-red-400'}>{score}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-300">No report data available.</p>
+          )}
         </div>
+
 
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">Questionnaire Insights</h2>
